@@ -2,6 +2,7 @@ import React, { useState,useEffect } from 'react'
 import "./Form.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {  useNavigate } from 'react-router-dom';
 //import "./Validation";
 
 
@@ -28,7 +29,7 @@ export const Form = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormVaues({ ...formValues, [name]: value});
-    sendData();
+    
   };
 
   const handleSubmit = (e) => {
@@ -36,11 +37,15 @@ export const Form = () => {
     setFormErrors(validate(formValues));
     setIsSubmit(true);
    
+   
   };
   useEffect(() => {
     console.log(formErrors);
     if(Object.keys(formErrors).length === 0 && isSubmit) {
       console.log(formValues);
+      sendData();
+      navigate('/PostList');
+
     }
 
   },[formErrors]);
@@ -63,6 +68,7 @@ export const Form = () => {
   };
 
   console.log('formErrors', formErrors)
+  const navigate = useNavigate();
 
   return (
     <div>
