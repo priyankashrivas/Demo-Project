@@ -1,0 +1,145 @@
+import React, { useState } from "react";
+import { Form, FormGroup, Label, Input, Col, Row, Button } from "reactstrap";
+import useValidator from "../../common/useValidator";
+import { useDispatch } from "react-redux";
+
+import "./Signup.css";
+import { signupAction } from "../../actions/AuthAction";
+
+const Signup = () => {
+  const formFields = {
+    fname: "",
+    lname: "",
+    email: "",
+    username: "",
+    password: "",
+    cpassword: "",
+  };
+
+  const dispatch = useDispatch();
+  const [fields, setField] = useState(formFields);
+  const [validator, showValidationMessage] = useValidator();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setField({ ...fields, [name]: value });
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (validator.allValid()){
+      console.log("success")
+    }
+    else {
+      showValidationMessage(true);
+    }
+
+    dispatch(signupAction(email,password));
+  }
+
+  return (
+    <>
+      <Form className="login-form" onSubmit={submitHandler}>
+        <div className="custom-form">
+          <h4 className="text-center mb-5">Create Your Account </h4>
+          <Row>
+            <Col md={6}>
+              <FormGroup>
+                <Label>FirstName</Label>
+                <Input
+                  type="fname"
+                  name={"fname"}
+                  placeholder="Enter your first name"
+                  value={fields.fname}
+                  onChange={handleChange}
+                />
+                {validator.message("fname", fields.fname, "required", {
+              className: "text-danger"
+            })}
+              </FormGroup>
+            </Col>
+            <Col md={6}>
+              <FormGroup>
+                <Label>LastName</Label>
+                <Input
+                  type="lname"
+                  name={"lname"}
+                  placeholder="Enter your last name"
+                  value={fields.lname}
+                  onChange={handleChange}
+                />
+                {validator.message("lname", fields.lname, "required", {
+              className: "text-danger"
+            })}
+              </FormGroup>
+            </Col>
+          </Row>
+
+          <FormGroup>
+            <Label>Email</Label>
+            <Input
+              type="email"
+              name={"email"}
+              placeholder="Enter your email"
+              value={fields.email}
+              onChange={handleChange}
+            />
+            {validator.message("email", fields.email, "required", {
+              className: "text-danger"
+            })}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Username</Label>
+            <Input
+              type="username"
+              name={"username"}
+              placeholder="Enter your username"
+              value={fields.username}
+              onChange={handleChange}
+            />
+            {validator.message("username", fields.username, "required", {
+              className: "text-danger"
+            })}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Password</Label>
+            <Input
+              type="password"
+              name={"password"}
+              placeholder="Enter your password"
+              value={fields.password}
+              onChange={handleChange}
+            />
+            {validator.message("password", fields.password, "required", {
+              className: "text-danger"
+            })}
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Confirm Password</Label>
+            <Input
+              type="cpassword"
+              name={"cpassword"}
+              placeholder="Enter your password again"
+              value={fields.cpassword}
+              onChange={handleChange}
+            />
+            {validator.message("cpassword", fields.cpassword, "required", {
+              className: "text-danger"
+            })}
+          </FormGroup>
+
+          <FormGroup>
+            <Button className="btn" color="info">
+              Register
+            </Button>
+          </FormGroup>
+        </div>
+      </Form>
+    </>
+  );
+};
+
+export default Signup;
