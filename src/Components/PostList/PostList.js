@@ -9,96 +9,105 @@ import { ToastContainer } from 'react-toastify';
 import { confirmAlert } from "react-confirm-alert";
 import 'react-toastify/dist/ReactToastify.css';
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { MDBCol, MDBIcon } from "mdbreact";
-
 
 
 
 const PostList = (id) => {
-    const navigate = useNavigate();
-    const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  // const[input, setInput] = useState('');
+  // const[output, setOutput] = useState([])
+  const [query, setQuery] = useState("");
   
+  // const [q, setQ] = useState("");
+  // const [searchParam] = useState(["email", "name"]);
+  // useEffect(() => {
 
-const fetchData = async () => {
+  // }, []);
+
+
+  const fetchData = async () => {
     await axios
-    .get("http://restapi.adequateshop.com/api/Tourist")
-    .then((res) => {
+      .get("http://restapi.adequateshop.com/api/Tourist")
+      .then((res) => {
         const posts = res.data;
         setPosts(posts);
         console.log(posts.data);
-    });
-};
+      });
+  };
 
-useEffect(() => {
+
+  useEffect(() => {
     fetchData();
-},  []);
+  }, []);
+  
+ 
+  const submit = (item) => {
+    confirmAlert({
+      title: "Warning",
+      message: "Are you sure you want to delete this.",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => deleteUser(item.id)
+        },
+        {
+          label: "No"
+          // onClick: () => alert("Click No")
+        }
+      ]
+    });
+  };
 
 
-const submit = (item) => {
-  confirmAlert({
-    title: "Warning",
-    message: "Are you sure you want to delete this.",
-    buttons: [
-      {
-        label: "Yes",
-        onClick: () => deleteUser(item.id)
-      },
-      {
-        label: "No"
-        // onClick: () => alert("Click No")
-      }
-    ]
-  });
-};
-
-
-const deleteUser = (id) => {
+  const deleteUser = (id) => {
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`, {
       method: "DELETE",
     }).then((result) => {
       result.json().then((resp) => {
-        if(resp){
-          //    console.log('hello')
-             const notify = toast.success('Deleted Successfully');
-             setTimeout(function() {
-              navigate('/PostList')
-             }, 3000);
-             
-          
-          }
+        if (resp) {
+          const notify = toast.success('Deleted Successfully');
+          setTimeout(function () {
+            navigate('/PostList')
+          }, 3000);
+
+
+        }
         console.warn(resp);
         fetchData();
       });
     });
   };
 
-  
 
-const Form = () => {
+
+  const Form = () => {
     navigate.pushState("/Form");
-};
+  };
 
-return(
+  return (
     <div>
-       <div className="flex items-center justify-between my-4">
+      <div className="flex items-center justify-between my-4">
         <h2 style={{ marginLeft: "" }} className="bolder text-lg">
           List
-        </h2> 
+        </h2>
         <button><Link to="/Form">Create</Link> {" "}
         </button>
-      
-          <div className="ui icon input">
+
+        <div className="ui icon input">
           <br></br>
-          <MDBIcon icon="search" />
-          <input className="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search" aria-label="Search" />
-            <i className="search"></i>
-
-        
-
+          <form class="example" action="action_page.php">
+            <input type="text"
+             placeholder="Search.."
+             name="search"
+             onChange={(e) => setQuery(e.target.value)}
+             />
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
         </div>
-        </div>
-       
-        <Container fluid className="page-container-section">
+      </div>
+
+      <Container fluid className="page-container-section">
         <Row className="custom-row">
           <Col xxl={10} xl={9} lg={8} md={8}>
             <Row className="m-t30">
@@ -122,7 +131,7 @@ return(
                       </div>
                     )}
                     <tbody>
-                      {posts.data &&
+                      {posts.data && 
                         posts.data.map((item) => {
                           return (
                             <tr key={item.id}>
@@ -133,18 +142,18 @@ return(
 
                               <td></td>
                               <td className="custom_view">
-                              <td>
-                              < ToastContainer/>
-                                <Button
-                                  variant="success"
-                                  size="sm"
-                                  title="view"
-                                  className="btn btn-dark"
-                                  onClick={() => submit(item)}
-                                >
-                                  Delete
-                                </Button>
-                              </td>
+                                <td>
+                                  < ToastContainer />
+                                  <Button
+                                    variant="success"
+                                    size="sm"
+                                    title="view"
+                                    className="btn btn-dark"
+                                    onClick={() => submit(item)}
+                                  >
+                                    Delete
+                                  </Button>
+                                </td>
                               </td>
                               <td>
                                 <Button
@@ -170,6 +179,6 @@ return(
         </Row>
       </Container>
     </div>
-);
+  );
 };
 export default PostList;
