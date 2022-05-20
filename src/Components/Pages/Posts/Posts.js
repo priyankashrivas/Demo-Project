@@ -7,17 +7,17 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { selectedUpdateUser } from "../../store/actions/PostAction";
 
-const Posts = (id) => {
+const Posts = ({placeholder,id}) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const [flag, setflag] = useState(false);
   const [allData,setAllData] = useState([]);
-const [filteredData,setFilteredData] = useState(allData);
+// const [filteredData,setFilteredData] = useState(allData);
+// const [searchInput, setSearchInput] = useState('');
+const [filteredData, setFilteredData] = useState([]);
+const [wordEntered, setWordEntered] = useState("");
 
-const handleSearch=(event)=>{
-
-}
 
   // fetching data
 
@@ -26,6 +26,7 @@ const handleSearch=(event)=>{
         const posts = res.data;
         setPosts(posts);
         console.log(posts.data);
+
       });
   };
 
@@ -57,6 +58,7 @@ const handleSearch=(event)=>{
     });
   };
 
+
   const createPost = () => {
     history.push("/cpost");
   };
@@ -75,6 +77,18 @@ const handleSearch=(event)=>{
   // const editPost = async (item) => {
   //   history.push('/editPost')
   // };
+  const handleFilter = (event) => {
+    const searchWord = event.target.value;
+    setWordEntered(searchWord);
+    const newFilter = searchWord.filter((value) => {
+      return value.title.toLowerCase().includes(searchWord.toLowerCase());
+    });
+    if (searchWord === "") {
+      setFilteredData([]);
+    } else {
+      setFilteredData(newFilter);
+    }
+  };
 
   return (
     <div>
@@ -92,7 +106,13 @@ const handleSearch=(event)=>{
           + Create Post
         </button>
       </div>
+      <input icon='search'
+      placeholder='Search...'
+      value={""}
+      // onChange={(e) => searchItems(e.target.value)}
 
+            />
+    
       <Container fluid className="page-container-section">
         <Row className="custom-row">
           <Col xxl={10} xl={9} lg={8} md={8}>
@@ -206,7 +226,20 @@ const handleSearch=(event)=>{
           </Col>
         </Row>
       </Container>
+      <div className="search">
+      <div className="searchInputs">
+        <input
+          type="text"
+          placeholder={placeholder}
+          value={wordEntered}
+          onChange={handleFilter}
+        />
+       
+      </div>
+     
     </div>
+    </div>
+    
   );
 };
 
