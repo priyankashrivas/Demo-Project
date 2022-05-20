@@ -76,6 +76,9 @@ export const EditUSer = () => {
             
         }).catch(function (error) {
             console.log(error)
+            if (error.response && error.response.data) {
+                toast.error(error.response.data.Message)
+              }
         })
         
     }
