@@ -4,4 +4,5 @@ export const MESSAGES = {
     USER_UPDATED_SUCCESSFULLY : "User Updated Successfully",
     USER_LOGOUT : "You have been logged out",
     USER_LOGIN: "You have been logged in",
+    SIGNIN_ERROR: "Please fill the form"
 }

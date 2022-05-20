@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
+import './posts.css'
 import axios from "axios";
-import { Container, Row, Col, Table, Alert, Button, Input } from "reactstrap";
+import { Container, Row, Col, Table, Alert, Button,DropdownMenu,DropdownItem, ButtonDropdown, DropdownToggle } from "reactstrap";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { toastr } from "react-redux-toastr";
@@ -10,11 +11,17 @@ import {
 } from "../../features/actions/PostAction";
 import { useDispatch, useSelector } from "react-redux";
 import { MESSAGES } from "../../config/Constant";
+import ReactPaginate from 'react-paginate';
 
 const Posts = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [searchName, setSearchName] = useState('')
+  //for pages
+  const [pageCount, setPageCount] = useState(1);
+  const [currentPage, setcurrentPage] = useState(0); 
+
+   const [dropdownOpen, setOpen] = useState(false);
+   const [searchName, setSearchName] = useState('')
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const user = useSelector((state) => state.users);
@@ -26,12 +33,15 @@ const Posts = () => {
   };
 
   // fetching data
-  const fetchData = async () => {
+  const fetchData = async (page) => {
     await axios
-      .get("http://restapi.adequateshop.com/api/Tourist")
+      .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
       .then((res) => {
         const posts = res.data;
         setPosts(posts);
+        console.log(res.data.total_pages)
+        setPageCount(res.data.total_pages)
+        
       });
   };
 
@@ -39,6 +49,14 @@ const Posts = () => {
     fetchData();
     setLoading(true);
   }, []);
+
+  //for pagination
+  const handlePageChange = (selectedObject) => {
+    setcurrentPage(selectedObject.selected);
+    console.log("page", selectedObject)
+    fetchData(selectedObject.selected);
+  }
+
 
   //onDeletePost
   const deleteUser = (id) => {
@@ -59,6 +77,11 @@ const Posts = () => {
     toastr.confirm("Are you sure you want to delete?", toastrConfirmOptions);
   };
 
+ 
+
+ 
+   
+
   return (
     <div>
       <div className="flex items-center justify-between my-4">
@@ -75,7 +98,27 @@ const Posts = () => {
         >
           Create +
         </button>
+
+       
+        <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
+                isOpen={dropdownOpen}>
+                <DropdownToggle style={{marginLeft: '10%', marginTop: '-16%'}}  className="bg-primary" caret>
+                   Sort Data By:
+                </DropdownToggle>
+                <DropdownMenu>
+                    <DropdownItem header>Alphabetically
+                    </DropdownItem>
+                    <DropdownItem value='atoz'>a-z</DropdownItem>
+                    <DropdownItem value='ztoa'>z-a</DropdownItem>
+                  
+                </DropdownMenu>
+            </ButtonDropdown>
+            
       </div>
+
+    
+
+
 
       {/* search bar */}
       <div className="form-outline mb-4">
@@ -89,6 +132,8 @@ const Posts = () => {
         />
       </div>
 
+      
+     
 
      
       <Container fluid className="page-container-section">
@@ -99,6 +144,7 @@ const Posts = () => {
                 <div className="table-scroll">
                   <Table className="custom-table">
                     {posts.data && posts.data.length != 0 ? (
+                      
                       <thead>
                         <tr>
                           <th width="300">Tourist id</th>
@@ -107,6 +153,8 @@ const Posts = () => {
                           <th>Tourist Location</th>
                         </tr>
                       </thead>
+                      
+                    
                     ) : (
                       <div>
                         <br />
@@ -131,6 +179,7 @@ const Posts = () => {
                               <td>{item.tourist_location}</td>
 
                               <td></td>
+                              
                               <td className="custom_view">
                                 <Button
                                   variant="success"
@@ -187,6 +236,18 @@ const Posts = () => {
                         })}
                     </tbody>
                   </Table>
+                  <ReactPaginate
+                      pageCount={pageCount}
+                      pageRange={2}
+                      marginPagesDisplayed={2}
+                      onPageChange={handlePageChange}
+                      containerClassName={'container'}
+                      previousLinkClassName={'page'}
+                      breakClassName={'page'}
+                      nextLinkClassName={'page'}
+                      pageClassName={'page'}
+                      disabledClassNae={'disabled'}
+                      activeClassName={'active'}/>
                 </div>
               </Col>
 

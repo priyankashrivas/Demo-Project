@@ -13,6 +13,7 @@ import {
   Dropdown,
   DropdownToggle,
 } from "reactstrap";
+
 import { isAuthenticated } from "../../selectors/AuthSelectors";
 import { logoutAction } from "../../features/actions/AuthAction";
 import Loader from "../loader/Loader";
@@ -76,8 +77,8 @@ const Header = (props) => {
                     </NavLink>
                   </NavItem>
                   <NavItem>
-                    <NavLink href="#" style={{ marginLeft: "745%" }}>
-                     {auth.auth.email}
+                    <NavLink href="#" style={{ marginLeft: "937%" }}>
+                    {auth.auth.email}
                     </NavLink>
                   </NavItem>
                  

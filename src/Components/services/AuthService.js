@@ -37,7 +37,7 @@ export function formatError(errorResponse) {
     case "EMAIL_NOT_FOUND":
       return "Email Not Found";
     case "INVALID_PASSWORD":
-      return "Invalid Password";
+      return "Invalid Password , should be atleast 6 characters";
     case "USER_DISABLED":
       return "User Disabled";
 

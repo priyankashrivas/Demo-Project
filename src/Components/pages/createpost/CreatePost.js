@@ -40,21 +40,6 @@ const CreatePost = () => {
     });
   };
 
-  //handleSubmit 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if(selectedUser){
-  //     console.log('update')
-  //    updateUserHandler()
-  //   }
-  //   else (
-  //     createUserHandler()
-  //   )
-
-  // }
-
-
-
   //Create User api
   const createUserHandler = (e) => {
     // e.preventDefault();
@@ -64,8 +49,10 @@ const CreatePost = () => {
         .then((response) => {
           console.log("New User", response);
 
-          toastr.success("Success", MESSAGES.USER_CREATED_SUCCESSFULLY, {autoClose: 10000});
-          console.log("created new user")
+          toastr.success("Success", MESSAGES.USER_CREATED_SUCCESSFULLY, {
+            autoClose: 10000,
+          });
+          console.log("created new user");
           history.push("/posts");
         })
         .catch((error) => {
@@ -77,8 +64,7 @@ const CreatePost = () => {
   };
 
   const backToPost = () => {
-   window.location.assign('/posts')
-   
+    window.location.assign("/posts");
   };
 
   //update user details
@@ -96,17 +82,16 @@ const CreatePost = () => {
       .put(`${API.updateUsers}/${params.id}`, reqData)
       .then((res) => {
         console.log("response", res);
-       
-        toastr.success("Success", MESSAGES.USER_UPDATED_SUCCESSFULLY, {autoClose: 10000});
-          console.log("Updated User")
-          history.push('/posts')
-          window.location.reload()
-          
-        
+
+        toastr.success("Success", MESSAGES.USER_UPDATED_SUCCESSFULLY, {
+          autoClose: 10000,
+        });
+        console.log("Updated User");
+        history.push("/posts");
+        window.location.reload();
       })
       .catch((error) => {
         console.log("error", error.response);
-        
       });
   }
 
@@ -178,8 +163,10 @@ const CreatePost = () => {
         <br />
 
         <div style={{ marginLeft: "40%" }}>
-          <Button className="btn btn-success me-3" onClick={createUserHandler} >Create Post +</Button>
-          <Button className="btn btn-success me-3" onClick={updateUserHandler} >
+          <Button className="btn btn-success me-3" onClick={createUserHandler}>
+            Create Post +
+          </Button>
+          <Button className="btn btn-success me-3" onClick={updateUserHandler}>
             Update Details
           </Button>
         </div>

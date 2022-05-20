@@ -1,21 +1,21 @@
 import React from "react";
 import Header from "./Components/common/Header/Header";
-import { Redirect, Route, Switch, BrowserRouter } from "react-router-dom";
+import { Route, Switch, BrowserRouter } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { checkAutoLogin } from "./Components/services/AuthService";
 import ReduxToastr from "react-redux-toastr";
 import { isAuthenticated } from "./Components/selectors/AuthSelectors";
+
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
 
 const Home = lazy(() => import("./Components/pages/home/Home"));
-const CreatePost = lazy(() =>
-  import("./Components/pages/createpost/CreatePost")
-);
+const CreatePost = lazy(() =>import("./Components/pages/createpost/CreatePost"));
 const SignUp = lazy(() => import("./Components/pages/signup/SignUp"));
 const Login = lazy(() => import("./Components/pages/signin/Login"));
 const Posts = lazy(() => import("./Components/pages/posts/Posts"));
 const ViewUser = lazy(() => import("./Components/pages/viewuser/ViewUser"));
+
 
 const App = (props) => {
   const dispatch = useDispatch();

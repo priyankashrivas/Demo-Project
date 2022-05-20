@@ -4,6 +4,9 @@ import { signupAction, loadingToggleAction } from '../../features/actions/AuthAc
 import Loader from '../../common/loader/Loader';
 import { Button, Input, Label } from 'reactstrap';
 import { Link, useHistory } from 'react-router-dom';
+import useValidator from '../../common/usevalidator/useValidator';
+import { toastr } from 'react-redux-toastr';
+import { MESSAGES } from '../../config/Constant';
 
 const SignUp = (props) => {
   const history = useHistory();
@@ -12,30 +15,30 @@ const SignUp = (props) => {
   let errorsObj = { email: '', password: '' };
   const [errors, setErrors] = useState(errorsObj);
   const [password, setPassword] = useState('');
+  const [validator, showValidationMessage] = useValidator();
 
   function onSignUp(e) {
     e.preventDefault();
     let error = false;
     const errorObj = { ...errorsObj };
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (email === '') {
-        errorObj.email = 'Email is Required';
-        error = true;
-    } else if (!regex.test(errorObj.email)){
-      errorObj.email = "Invalid Email"
+    setErrors(errorObj)
+     if(validator.allValid()) {
+      dispatch(loadingToggleAction(true));
+      dispatch(signupAction(email, password, (response) => {
+        console.log(response);
+        if(response.status === 200) {
+          history.push('/posts')
+          toastr.success("success", MESSAGES.USER_CREATED_SUCCESSFULLY)
+        }
+      }));
+      
     }
-
-    if (password === '') {
-        errorObj.password = 'Password is Required';
-        error = true;
+    else {
+      toastr.error("Incorrect", MESSAGES.SIGNIN_ERROR);
+      showValidationMessage(true);
     }
-
-    setErrors(errorObj);
-
-    if (error) return;
-    dispatch(loadingToggleAction(true));
-    dispatch(signupAction(email, password));
-  history.push('/posts');
+   
+  // history.push('/posts');
    
 }
 
@@ -57,32 +60,39 @@ const SignUp = (props) => {
                 )}
                 <form onSubmit={onSignUp}>
                   <div style={{textAlign:'center'}}>
-                    <Label>Email</Label>
+                    <Label>Email<span style={{ color: "red" }}>*</span></Label>
                     <div>
                     <Input
                                 type='text'
                                 className='border border-gray-600 p-1 w-full'
                                 style={{width:'79%', marginLeft: '11%'}}
                                 value={email}
+                                name="email"
                                 onChange={(e) => setEmail(e.target.value)}
                             />
                     </div>
-                    {errors.email && <div>{errors.email}</div>}
+                    {validator.message("email", email, "required", {
+                className: "text-danger",
+              })}
+                   
                   </div>
                   <div style={{textAlign:'center'}}>
-                        <Label>Password</Label>
+                        <Label>Password <span style={{ color: "red" }}>*</span></Label>
                         <div >
                             <Input
                                 type='password'
                                 className='border border-gray-600 p-1 w-full'
                                 value={password}
+                                name="password"
                                 style={{width:'79%', marginLeft: '11%'}}
                                 onChange={(e) =>
                                     setPassword(e.target.value)
                                 }
                             />
                         </div>
-                        {errors.password && <div>{errors.password}</div>}
+                        {validator.message("password", password, "required", {
+                className: "text-danger",
+              })}
                     </div>
                     <div className='my-3'>
                         <Button

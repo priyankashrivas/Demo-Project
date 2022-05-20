@@ -22,32 +22,34 @@ export const LOGIN_FAILED_ACTION = "[login action] failed login";
 export const LOGOUT_ACTION = "[logout action] logout action";
 
 //signup function
-export function signupAction(email, password) {
+export function signupAction(email, password, callback) {
   return (dispatch) => {
     signup(email, password)
       .then((response) => {
         console.log(response);
+        callback(response)
         saveTokenInLocalStorage(response.data);
-        // runLogoutTimer(dispatch, response.data.expiresIn * 10000000000);
         dispatch(loadingToggleAction(false));
         dispatch(confirmedSignupAction(response.data));
       })
       .catch((error) => {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
+        callback(error.response)
         dispatch(signupFailedAction(errorMessage));
-        alert(errorMessage);
+        
       });
   };
 }
 
 //login function
 
-export function loginAction(email, password) {
+export function loginAction(email, password, callback) {
   return (dispatch) => {
     login(email, password)
       .then((response) => {
         console.log(response);
+        callback(response)
         saveTokenInLocalStorage(response.data);
         dispatch(loadingToggleAction(false));
         dispatch(loginConfirmedAction(response.data));
@@ -55,7 +57,7 @@ export function loginAction(email, password) {
       .catch((error) => {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
-         
+        callback(error.response)
         dispatch(loginFailedAction(errorMessage));
       });
   };
