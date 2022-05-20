@@ -36,6 +36,7 @@ export function signupAction(email, password) {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
         dispatch(signupFailedAction(errorMessage));
+        alert(errorMessage);
       });
   };
 }
@@ -54,6 +55,7 @@ export function loginAction(email, password) {
       .catch((error) => {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
+         
         dispatch(loginFailedAction(errorMessage));
       });
   };

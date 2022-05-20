@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import { Container, Row, Col, Table, Alert, Button } from "reactstrap";
+import { Container, Row, Col, Table, Alert, Button, Input } from "reactstrap";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { toastr } from "react-redux-toastr";
@@ -14,16 +14,15 @@ import { MESSAGES } from "../../config/Constant";
 const Posts = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [searchName, setSearchName] = useState('')
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const user = useSelector((state) => state.users);
   const selectedUser = user.posts;
   const params = useParams();
-  
+
   const create = () => {
-   window.location.assign("/createpost");
-    
+    window.location.assign("/createpost");
   };
 
   // fetching data
@@ -60,8 +59,6 @@ const Posts = () => {
     toastr.confirm("Are you sure you want to delete?", toastrConfirmOptions);
   };
 
-  
-
   return (
     <div>
       <div className="flex items-center justify-between my-4">
@@ -80,6 +77,20 @@ const Posts = () => {
         </button>
       </div>
 
+      {/* search bar */}
+      <div className="form-outline mb-4">
+        <input
+        style={{width: '55%', marginLeft: '1%'}}
+        type='search'
+        className="form-control"
+        id="datatable-search-input"
+        placeholder="Search...."
+        onChange={(e) => setSearchName(e.target.value)}
+        />
+      </div>
+
+
+     
       <Container fluid className="page-container-section">
         <Row className="custom-row">
           <Col xxl={10} xl={9} lg={8} md={8}>
@@ -104,7 +115,14 @@ const Posts = () => {
                     )}
                     <tbody>
                       {posts.data &&
-                        posts.data.map((item) => {
+                        posts.data.filter((item) => {
+                          if(searchName == "") {
+                            return item
+                          }
+                          else if(item.tourist_name.toLowerCase().includes(searchName.toLowerCase())) {
+                            return item
+                          }
+                        }).map((item) => {
                           return (
                             <tr key={item.id}>
                               <td style={{ width: "18%" }}>{item.id}</td>
@@ -121,11 +139,14 @@ const Posts = () => {
                                   className="btn btn-info"
                                 >
                                   <div
-                                  onClick={() => {
-                                    history.push(`/posts/viewuser/${item.id}`)
-                                  }}
+                                    onClick={() => {
+                                      history.push(
+                                        `/posts/viewuser/${item.id}`
+                                      );
+                                    }}
                                   >
-                                    View</div>
+                                    View
+                                  </div>
                                 </Button>
                               </td>
                               <td>

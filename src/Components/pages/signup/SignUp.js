@@ -3,10 +3,10 @@ import { connect, useDispatch } from 'react-redux';
 import { signupAction, loadingToggleAction } from '../../features/actions/AuthAction';
 import Loader from '../../common/loader/Loader';
 import { Button, Input, Label } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const SignUp = (props) => {
-
+  const history = useHistory();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   let errorsObj = { email: '', password: '' };
@@ -35,17 +35,19 @@ const SignUp = (props) => {
     if (error) return;
     dispatch(loadingToggleAction(true));
     dispatch(signupAction(email, password));
+  history.push('/posts');
    
 }
 
   return (
       <div className='flex justify-center my-5'>
-        {props.showLoading && <Loader/>}
+        {/* {props.showLoading && <Loader/>} */}
       <div className=' shadow p-3 ' style={{width: '31%', marginLeft: '30%', textAlign: 'center'}}>
         <h1 style={{textAlign: 'center', marginBottom: '7%'}}>Sign Up</h1>
         {props.errorMessage && (
-                    <div className='bg-red-300  border border-red-900 p-1 my-2' style={{color: 'red'}}>
+          <div className='bg-red-300  border border-red-900 p-1 my-2' style={{color: 'red'}}>
                         {props.errorMessage}
+                        
                     </div>
                 )}
                 {props.successMessage && (

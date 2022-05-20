@@ -10,6 +10,8 @@ import {
   NavItem,
   NavLink,
   Button,
+  Dropdown,
+  DropdownToggle,
 } from "reactstrap";
 import { isAuthenticated } from "../../selectors/AuthSelectors";
 import { logoutAction } from "../../features/actions/AuthAction";
@@ -58,11 +60,11 @@ const Header = (props) => {
 
               {props.isAuthenticated && (
                 <>
-                  <NavItem>
-                    <Button style={{ marginLeft: "1800%" }} onClick={onLogout}>
+                   <NavItem>
+                    <Button style={{ marginLeft: "2126%" }} onClick={onLogout}>
                       Logout
                     </Button>
-                  </NavItem>
+                  </NavItem> 
                   <NavItem>
                     <NavLink href="/home" style={{ marginLeft: "-144%" }}>
                       Home
@@ -73,6 +75,12 @@ const Header = (props) => {
                       Posts
                     </NavLink>
                   </NavItem>
+                  <NavItem>
+                    <NavLink href="#" style={{ marginLeft: "745%" }}>
+                     {auth.auth.email}
+                    </NavLink>
+                  </NavItem>
+                 
                 </>
               )}
             </Nav>

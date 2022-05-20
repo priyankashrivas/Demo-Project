@@ -45,7 +45,7 @@ const Login = (props) => {
   return (
     <div>
        <div className='flex justify-center my-5'>
-        {props.showLoading && <Loader/>}
+        {/* {props.showLoading && <Loader/>} */}
       <div className=' shadow p-3 ' style={{width: '31%', marginLeft: '30%', textAlign: 'center'}}>
         <h1 style={{textAlign: 'center', marginBottom: '7%'}}>Sign In</h1>
         {props.errorMessage && (
