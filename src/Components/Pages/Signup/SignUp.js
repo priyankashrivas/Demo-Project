@@ -2,9 +2,10 @@ import React, {useState} from 'react'
 import { connect, useDispatch } from 'react-redux';
 import { signupAction } from '../../store/actions/AuthAction';
 import { toast } from "react-toastify";
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
 const SignUp = (props) => {
-
+   const history=useHistory();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   let errorsObj = { email: '', password: '' };
@@ -18,20 +19,20 @@ const SignUp = (props) => {
     if (email === '') {
         errorObj.email = 'Email is Required';
         error = true;
-        toast.warning('Incpmplete Email Field Entry');
+        // toast.warning('Incpmplete Email Field Entry');
     }
 
     if (password === '') {
         errorObj.password = 'Password is Required';
         error = true;
-        toast.warning('Incpmplete Password Field Entry');
+        // toast.warning('Incpmplete Password Field Entry');
     }
 
     setErrors(errorObj);
 
     if (error) return;
     dispatch(signupAction(email, password, props.history));
-   
+   history.push('/login')
 }
 
   return (
@@ -97,7 +98,7 @@ const SignUp = (props) => {
 const mapStateToProps = (state) => {
   return {
       errorMessage: state.auth.errorMessage,
-      // successMessage: state.auth.successMessage,
+      successMessage: state.auth.successMessage,
       // showLoading: state.auth.showLoading,
   };
 };

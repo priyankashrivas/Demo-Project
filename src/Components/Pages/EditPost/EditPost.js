@@ -289,8 +289,9 @@ tourist_location: posts && posts.tourist_location,
         const notify = toast.success('Edited Successfully');
         setTimeout(function () {
           // navigate('/PostList')
+          history.push("/posts")
         }, 5000);
-
+        history.push("/posts")
         //    
       }
     }).catch(function (error) {
@@ -307,6 +308,7 @@ tourist_location: posts && posts.tourist_location,
             type="text"
             name="tourist_name"
             value={user.tourist_name}
+           
             onChange={changeHandler}
           />
         </div>

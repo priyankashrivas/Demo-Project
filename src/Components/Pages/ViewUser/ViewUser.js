@@ -52,6 +52,7 @@ import { useHistory,useParams } from 'react-router-dom';
                   className="form-control"
                   value={details.tourist_name}
                   placeholder={"Name"}
+                  disabled="disabled"
                   onChange={(e) => setName(e.target.value)}
                 /><br/>
               </div>
@@ -60,6 +61,7 @@ import { useHistory,useParams } from 'react-router-dom';
                   className="form-control"
                   value={details.tourist_email}
                   placeholder={"Email"}
+                  disabled="disabled"
                   onChange={(e) => setEmail(e.target.value)}
                 /><br/>
               </div>
@@ -68,6 +70,7 @@ import { useHistory,useParams } from 'react-router-dom';
                   className="form-control"
                   value={details.tourist_location}
                   placeholder={"Location"}
+                  disabled="disabled"
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>

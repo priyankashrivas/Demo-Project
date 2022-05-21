@@ -6,33 +6,35 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { selectedUpdateUser } from "../../store/actions/PostAction";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
-const Posts = ({placeholder,id}) => {
+const Posts = ({ placeholder, id }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const [flag, setflag] = useState(false);
-  const [allData,setAllData] = useState([]);
-// const [filteredData,setFilteredData] = useState(allData);
-// const [searchInput, setSearchInput] = useState('');
-const [filteredData, setFilteredData] = useState([]);
-const [wordEntered, setWordEntered] = useState("");
+  const [allData, setAllData] = useState([]);
+  // const [filteredData,setFilteredData] = useState(allData);
+  // const [searchInput, setSearchInput] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [wordEntered, setWordEntered] = useState("");
 
 
   // fetching data
 
   const fetchData = async () => {
     await axios.get("http://restapi.adequateshop.com/api/Tourist").then((res) => {
-        const posts = res.data;
-        setPosts(posts);
-        console.log(posts.data);
+      const posts = res.data;
+      setPosts(posts);
+      console.log(posts.data);
 
-      });
+    });
   };
 
   useEffect(() => {
     fetchData();
-   
+
   }, []);
 
   // delete by id
@@ -57,13 +59,26 @@ const [wordEntered, setWordEntered] = useState("");
       });
     });
   };
-
-
+const submit=(item)=>{
+confirmAlert({
+  title:"Warning Alert",
+  message:"Are you sure you want to delete..?",
+  buttons:[
+    {
+      label:"Yes",
+      onClick:()=>deleteUser(item.id)
+    },
+    {
+      label:"No"
+    }
+  ]
+});
+};
   const createPost = () => {
     history.push("/cpost");
   };
   const EditPost = (item) => {
-    console.log('item',item)
+    console.log('item', item)
     history.push("/editpost");
   };
   // const editPost = (item) => {
@@ -107,12 +122,12 @@ const [wordEntered, setWordEntered] = useState("");
         </button>
       </div>
       <input icon='search'
-      placeholder='Search...'
-      value={""}
+        placeholder='Search...'
+        value={""}
       // onChange={(e) => searchItems(e.target.value)}
 
-            />
-    
+      />
+
       <Container fluid className="page-container-section">
         <Row className="custom-row">
           <Col xxl={10} xl={9} lg={8} md={8}>
@@ -121,7 +136,7 @@ const [wordEntered, setWordEntered] = useState("");
                 <div className="table-scroll">
                   <Table className="custom-table">
                     {console.log("abcd", posts && posts.data)}
-                    {posts.data && posts.data.length !==0 ? (
+                    {posts.data && posts.data.length !== 0 ? (
                       <thead>
                         <tr>
                           <th width="300">Tourist id</th>
@@ -163,8 +178,8 @@ const [wordEntered, setWordEntered] = useState("");
                                     title="view"
                                     className="btn btn-info"
                                     onClick={() => {
-                                 history.push(`/posts/viewuser/${item.id}`)
-  
+                                      history.push(`/posts/viewuser/${item.id}`)
+
                                     }}
                                   >
                                     View
@@ -177,22 +192,22 @@ const [wordEntered, setWordEntered] = useState("");
                                   size="sm"
                                   title="view"
                                   className="btn btn-danger"
-                                  onClick={() => deleteUser(item.id)}
-                                 
+                                  onClick={() => submit(item.id)}
+
                                 >
                                   Delete
                                 </Button>
                               </td>
 
                               <td>
-                              
-                      {/* <Link
+
+                                {/* <Link
                         to={`/editPost/${item.id}`}
                         className="btn btn-sm btn-primary mr-1"
                       >
                         Edit
                       </Link> */}
-                      
+
                                 <Button
                                   variant="success"
                                   type="button"
@@ -203,14 +218,14 @@ const [wordEntered, setWordEntered] = useState("");
                                   // onClick={() => {
                                   //   dispatch(selectedUpdateUser(item))
                                   //   history.push(`/editPost/${item.id}`)
-     
+
                                   //      }}
                                   onClick={() => {
                                     history.push(`/posts/editPost/${item.id}`)
-     
-                                       }}
+
+                                  }}
                                 >
-                                  
+
                                   Edit
                                 </Button>
                               </td>
@@ -227,19 +242,19 @@ const [wordEntered, setWordEntered] = useState("");
         </Row>
       </Container>
       <div className="search">
-      <div className="searchInputs">
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={wordEntered}
-          onChange={handleFilter}
-        />
-       
+        <div className="searchInputs">
+          <input
+            type="text"
+            placeholder={placeholder}
+            value={wordEntered}
+            onChange={handleFilter}
+          />
+
+        </div>
+
       </div>
-     
     </div>
-    </div>
-    
+
   );
 };
 

@@ -57,7 +57,7 @@ const Login = ({props}) => {
     
     toast.success("User loggedIn successfully!!");
    
-    // navigate('./profile')
+    history.push('/posts')
 }
 
 
@@ -69,7 +69,7 @@ const Login = ({props}) => {
      
     };
 
-    history.push('/posts')
+   
     
     // localStorage.setItem("name", name);
     // localStorage.setItem("password", pswd);
