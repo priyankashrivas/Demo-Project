@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Label, Input, Button } from "reactstrap";
-import {  useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useValidator from '../Validator/Validator';
 
 
 
@@ -21,6 +22,8 @@ export const EditUSer = () => {
         tourist_location: ''
     };
     const [user, setUser] = useState(initialValues);
+    const [validator, showValidationMessage] = useValidator();
+    const [formValues, setFormValues] = useState(initialValues);
     let params = useParams()
     const fetchData = async () => {
         await axios
@@ -57,62 +60,37 @@ export const EditUSer = () => {
         EditUser();
     }
 
-    const EditUser = (id) =>{
-         axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`,{
+    const EditUser = (id) => {
+        axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`, {
             id: params.id,
             tourist_name: user.tourist_name,
             tourist_email: user.tourist_email,
-            tourist_location:user.tourist_location
+            tourist_location: user.tourist_location
         }).then((res) => {
-           if(res){
-            //    console.log('hello')
-               const notify = toast.success('Edited Successfully');
-               setTimeout(function() {
-                navigate('/PostList')
-               }, 5000);
-               
-            
+            if (res) {
+
+                const notify = toast.success('Edited Successfully');
+                setTimeout(function () {
+                    navigate('/PostList')
+                }, 5000);
+
             }
-            
+
         }).catch(function (error) {
             console.log(error)
             if (error.response && error.response.data) {
                 toast.error(error.response.data.Message)
-              }
+            }
         })
-        
+
     }
-
-    // const pushData = async () => {
-    //     await axios
-    //         .push(`http://restapi.adequateshop.com/api/Tourist/${params.id}`)
-    //         .then((res) => {
-    //             const posts = res.data;
-    //             setData(posts);
-    //             let initialValues = {
-    //                 tourist_name: posts && posts.tourist_name,
-    //                 tourist_email: posts && posts.tourist_email,
-    //                 tourist_location: posts && posts.tourist_location,
-    //             };
-    //             setUser(initialValues)
-    //             console.log(posts.data);
-
-    //         });
-    // };
-    // useEffect(() => {
-    //     pushData();
-    // }, []);
-
-
-
-
-
 
 
     return (
-      
-        <div><h3>Edit User Here</h3>
-          < ToastContainer/>
+
+        <div>
+            {console.log("valid", validator)}<h3>Edit User Here</h3>
+            < ToastContainer />
             <form onSubmit={handelSubmitEditUser}>
                 <div>
                     <Label for="tourist-name">Name</Label>
@@ -132,6 +110,7 @@ export const EditUSer = () => {
                         value={user.tourist_email}
                         onChange={changeHandler}
                     />
+                    {validator.message("email", formValues.email, "required|email", { className: "text-danger", })}
                 </div>
 
                 <div>
@@ -146,7 +125,7 @@ export const EditUSer = () => {
                 <br />
 
                 <Button type="submit" className="btn btn-info">
-                Edit User
+                    Edit User
                 </Button>
             </form>
         </div>

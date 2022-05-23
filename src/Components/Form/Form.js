@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 
 export const Form = () => {
   const initialValues = { name: "", email: "", address: "" };
-  const [formValues, setFormVaues] = useState(initialValues);
+  const [formValues, setFormValues] = useState(initialValues);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [validator, showValidationMessage] = useValidator();
@@ -23,9 +23,10 @@ export const Form = () => {
         .then(function (response) {
           console.log(response);
           toast.success(response.message)
-          console.log("navigate")
-          navigate("/postlist")
-
+          const notify = toast.success('Created Successfully');
+          setTimeout(function () {
+            navigate('/PostList')
+          }, 3000);
 
         }).catch(function (error) {
           if (error.response && error.response.data) {
@@ -41,7 +42,7 @@ export const Form = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormVaues({ ...formValues, [name]: value });
+    setFormValues({ ...formValues, [name]: value });
 
   };
 
@@ -52,7 +53,6 @@ export const Form = () => {
       sendData();
     }
   };
-
 
   console.log('formErrors', formErrors)
   const navigate = useNavigate();
@@ -78,7 +78,7 @@ export const Form = () => {
           <input type='text' className="form-control" name='email' placeholder='email' value={formValues.email}
             onChange={handleChange}
           />
-          {validator.message("Email", formValues.email, "required", { className: "text-danger", })}
+          {validator.message("email", formValues.email, "required|email", { className: "text-danger", })}
 
         </div>
         <p>{formErrors.email}</p>
@@ -88,7 +88,7 @@ export const Form = () => {
           <input type='text' className="form-control" name='address' placeholder='address' value={formValues.address}
             onChange={handleChange}
           />
-          {validator.message("Address", formValues.address, "required", { className: "text-danger", })}
+          {validator.message("address", formValues.address, "required", { className: "text-danger", })}
         </div>
         <p>{formErrors.address}</p>
         <br />

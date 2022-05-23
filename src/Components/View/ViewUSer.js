@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate, useParams, Link, Navigate } from 'react-router-dom';
+import './ViewUSer.css';
 
 export const ViewUSer = () => {
     const params = useParams();
@@ -28,20 +29,20 @@ export const ViewUSer = () => {
     }
 
     return (
-        <div style={{ textAlign: "center", marginTop: "2%" }}>
-            <h3>Tourist Details of: {details.id}</h3>
-            {
-                <table>
-                    <tbody>
-                        <tbody style={{ listStyleType: "none" }}>
-                            <tr>
-                                <td>Tourist Name: {details.tourist_name}</td>
-                                <td>Tourist Email: {details.tourist_email}</td>
-                               <td>Tourist Location: {details.tourist_location}</td>
-                            </tr>
-                        </tbody>
-                    </tbody>
-                </table>
+        <div style={{ textAlign: "center", marginTop: "2%"  }}>
+      <h4>User Details of: {details.id}</h4>
+      {
+        <ul style={{ listStyleType: "none" }}>
+          <li>
+            <b>Tourist Name:</b> {details.tourist_name}
+          </li>
+          <li>
+            <b>Tourist Email:</b> {details.tourist_email}
+          </li>
+          <li>
+            <b>Tourist Location</b> {details.tourist_location}
+          </li>
+        </ul>
             }{" "}
             <div className="mt-5">
                 <button

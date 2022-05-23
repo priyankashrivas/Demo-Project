@@ -1,39 +1,34 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { Container, Row, Col, Table, Alert, Button, Input } from "reactstrap";
+import { Container, Row, Col, Table, Alert, Button, Toggle, DropdownMenu, ButtonDropdown, DropdownToggle, DropdownItem } from "reactstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { confirmAlert } from "react-confirm-alert";
-
-
+import ReactPaginate from "react-paginate";
+import './PostList.css';
 
 const PostList = (id) => {
   const params = useParams();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [searchName, setSearchName] = useState('');
-  // const[input, setInput] = useState('');
-  // const[output, setOutput] = useState([])
-  
+  const [pageCount, setPageCount] = useState(1);
+  const [currentPage, setcurrentPage] = useState(0);
+  const [isLoaded, setisLoaded] = useState(false);
+  const [dropdownOpen, setOpen] = useState(false);
 
-  
-  // const [q, setQ] = useState("");
-  // const [searchParam] = useState(["email", "name"]);
-  // useEffect(() => {
-
-  // }, []);
-
-
-  const fetchData = async () => {
+  const fetchData = async (page) => {
     await axios
-      .get("http://restapi.adequateshop.com/api/Tourist")
+      .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
       .then((res) => {
         const posts = res.data;
         setPosts(posts);
         console.log(posts.data);
+        setPageCount(posts.total_pages);
+        setisLoaded(true);
       });
   };
 
@@ -41,7 +36,13 @@ const PostList = (id) => {
   useEffect(() => {
     fetchData();
   }, []);
-  
+
+  const handlePageChange = (selectedObject) => {
+    setcurrentPage(selectedObject.selected);
+    fetchData(selectedObject.selected);
+    console.log("hello", selectedObject);
+  };
+
  
   const submit = (item) => {
     confirmAlert({
@@ -81,9 +82,30 @@ const PostList = (id) => {
   };
 
 
-
   const Form = () => {
     navigate.pushState("/Form");
+  };
+  const sortAscending = () => {
+    posts.data.sort((a, b) => {
+      let fa = a.tourist_name.toLowerCase(),
+      fb = b.tourist_name.toLowerCase();
+      if(fa < fb) {
+        return -1;
+        console.log("post", posts);
+      }
+      return 0;
+    });
+  };
+  const sortDecending = () => {
+    posts.data.sort((a,b) => {
+      let fa = a.tourist_name.toUpperCase(),
+      fb = b.tourist_name.toUpperCase();
+      if (fa > fb) {
+        return -1;
+        console.log("post",posts);
+      }
+      return 0;
+    });
   };
 
   return (
@@ -94,27 +116,30 @@ const PostList = (id) => {
         </h2>
         <button><Link to="/Form">Create</Link> {" "}
         </button>
-        
 
-        {/* <div className="ui icon input">
-          <br></br>
-          <form class="example" action="action_page.php">
-            <input type="text"
-             placeholder="Search.."
-             name="search"
-             />
-          </form>
-        </div> */}
+        <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
+          isOpen={dropdownOpen}>
+          <DropdownToggle style={{ marginLeft: '10%', marginTop: '-%' }} className="bg-info" caret >
+            Sort Data
+          </DropdownToggle>
+          <DropdownMenu>
+            <DropdownItem header>Alphabetically
+            </DropdownItem>
+            <DropdownItem value='atoz' onClick={sortAscending}>a-z</DropdownItem>
+            <DropdownItem value='ztoa' onClick={sortDecending}>z-a</DropdownItem>
+          </DropdownMenu>
+        </ButtonDropdown>
+
         <div className="form-outline mb-4">
-        <input
-        style={{width: '40%', marginLeft: '8%'}}
-        type='search'
-        className="form-control"
-        id="datatable-search-input"
-        placeholder="Search...."
-        onChange={(e) => setSearchName(e.target.value)}
-        />
-      </div>
+          <input
+            style={{ width: '30%', marginLeft: '15%' }}
+            type='search'
+            className="form-control"
+            id="datatable-search-input"
+            placeholder="Search...."
+            onChange={(e) => setSearchName(e.target.value)}
+          />
+        </div>
       </div>
 
       <Container fluid className="page-container-section">
@@ -141,12 +166,12 @@ const PostList = (id) => {
                       </div>
                     )}
                     <tbody>
-                      {posts.data && 
+                      {posts.data &&
                         posts.data.filter((item) => {
-                          if(searchName == "") {
+                          if (searchName == "") {
                             return item
                           }
-                          else if(item.tourist_name.toLowerCase().includes(searchName.toLowerCase())){
+                          else if (item.tourist_name.toLowerCase().includes(searchName.toLowerCase())) {
                             return item
                           }
                         }).map((item) => {
@@ -158,24 +183,24 @@ const PostList = (id) => {
                               <td>{item.tourist_location}</td>
 
                               <td>
-                              <td className="custom_view">
-                                <Button
-                                variant="success"
-                                size="sm"
-                                title="view"
-                                className="="btn btn-info
-                                >
-                                  <div
-                                     onClick={() => {
-                                      navigate(
-                                        `/postList/view/${item.id}`
-                                      );
-                                    }}
-                                     >View
-                                     </div></Button>
-                                     </td>
+                                <td className="custom_view">
+                                  <Button
+                                    variant="success"
+                                    size="sm"
+                                    title="view"
+                                    className="=" btn btn-info
+                                  >
+                                    <div
+                                      onClick={() => {
+                                        navigate(
+                                          `/postList/view/${item.id}`
+                                        );
+                                      }}
+                                    >View
+                                    </div></Button>
+                                </td>
                                 <td>
-                                
+
                                   <Button
                                     variant="success"
                                     size="sm"
@@ -203,6 +228,23 @@ const PostList = (id) => {
                         })}
                     </tbody>
                   </Table>
+                  {isLoaded ? (
+                    <ReactPaginate
+                      pageCount={pageCount}
+                      pageRange={2}
+                      marginPageDisplayed={2}
+                      onPageChange={handlePageChange}
+                      containerClassName={'container'}
+                      previousLinkClassName={'page'}
+                      breakClassName={'page'}
+                      nextLinkClassName={'page'}
+                      pageClassName={'page'}
+                      disabledClassName={'disabled'}
+                      activeClassName={'active'}
+                    />
+                  ) : (
+                    <div>Nothing to display</div>
+                  )}
                 </div>
               </Col>
               <Col xxl={4} xl={3} lg={4} md={4}></Col>
