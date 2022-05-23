@@ -1,3 +1,4 @@
+//importing auth action creators from action
 import {
   SIGNUP_CONFIRMED_ACTION,
   SIGNUP_FAILED_ACTION,
@@ -5,7 +6,6 @@ import {
   LOGIN_CONFIRMED_ACTION,
   LOGIN_FAILED_ACTION,
   LOGOUT_ACTION,
-  POSTS_ACTION,
 } from "../actions/AuthAction";
 
 const initialState = {
@@ -21,8 +21,8 @@ const initialState = {
   showLoader: false,
 };
 
+//auth reducer for signup
 export function AuthReducer(state = initialState, action) {
-  //reducers for signup
   if (action.type === SIGNUP_CONFIRMED_ACTION) {
     return {
       ...state,
@@ -44,8 +44,7 @@ export function AuthReducer(state = initialState, action) {
     };
   }
 
-  //reducers for signin
-
+  //auth reducers for signin
   if (action.type === LOGIN_CONFIRMED_ACTION) {
     return {
       ...state,
@@ -57,11 +56,11 @@ export function AuthReducer(state = initialState, action) {
   }
 
   //logout reducer
-  if(action.type === LOGOUT_ACTION) {
+  if (action.type === LOGOUT_ACTION) {
     return {
       ...state,
-      errorMessage:'',
-      successMessage: '',
+      errorMessage: "",
+      successMessage: "",
       auth: {
         email: "",
         idToken: "",
@@ -72,7 +71,7 @@ export function AuthReducer(state = initialState, action) {
     };
   }
 
- 
+  //reducer for loading
   if (action.type === LOADING_TOGGLE_ACTION) {
     return {
       ...state,
@@ -81,4 +80,3 @@ export function AuthReducer(state = initialState, action) {
   }
   return state;
 }
-

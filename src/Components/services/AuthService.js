@@ -1,5 +1,11 @@
+//importing library
 import axios from "axios";
-import { loginConfirmedAction, logoutAction } from "../features/actions/AuthAction";
+
+//importing actions
+import {
+  loginConfirmedAction,
+  logoutAction,
+} from "../features/actions/AuthAction";
 
 export function signup(email, password) {
   const postData = {
@@ -7,7 +13,7 @@ export function signup(email, password) {
     password,
     returnSecureToken: true,
   };
-  //axios call
+  //axios call for signup
   return axios.post(
     `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8`,
     postData
@@ -20,13 +26,14 @@ export function login(email, password) {
     password,
     returnSecureToken: true,
   };
-  //axios call
+  //axios call for signin
   return axios.post(
     `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8`,
     postData
   );
 }
 
+//function for errors related to signin and signup
 export function formatError(errorResponse) {
   switch (errorResponse.error.message) {
     case "EMAIL_EXISTS":
@@ -46,14 +53,15 @@ export function formatError(errorResponse) {
   }
 }
 
+//saving token in local storage
 export function saveTokenInLocalStorage(tokenDetails) {
-  tokenDetails.expireDate = new Date(new Date().getTime() + tokenDetails.expiresIn * 1000);
+  tokenDetails.expireDate = new Date(
+    new Date().getTime() + tokenDetails.expiresIn * 1000
+  );
   localStorage.setItem("userDetails", JSON.stringify(tokenDetails));
- 
 }
 
-
-
+//function for auto login
 export function checkAutoLogin(dispatch, history) {
   const tokenDetailsString = localStorage.getItem("userDetails");
   let tokenDetails = "";
@@ -62,16 +70,15 @@ export function checkAutoLogin(dispatch, history) {
     return;
   }
 
+  //token expirey
   tokenDetails = JSON.parse(tokenDetailsString);
   let expireDate = new Date(tokenDetails.expireDate);
   let todaysDate = new Date();
-  if(todaysDate > expireDate) {
+  if (todaysDate > expireDate) {
     dispatch(logoutAction(history));
     return;
   }
   dispatch(loginConfirmedAction(tokenDetails));
 
   const timer = expireDate.getTime() - todaysDate.getTime();
-  // runLogoutTimer(dispatch, timer);
-
 }

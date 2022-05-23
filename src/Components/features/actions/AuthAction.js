@@ -1,33 +1,32 @@
+//importing from services
 import {
   formatError,
   login,
-  runLogoutTimer,
   saveTokenInLocalStorage,
   signup,
 } from "../../services/AuthService";
 
 //login action types
-
 export const SIGNUP_CONFIRMED_ACTION = "[signup action] confirmed signup";
 export const SIGNUP_FAILED_ACTION = "[signup action] failed signup";
 
-//toggle
+//toggle action types
 export const LOADING_TOGGLE_ACTION = "[Loading action] toggle loading";
 
 //signin action types
 export const LOGIN_CONFIRMED_ACTION = "[login action] confirmed login";
 export const LOGIN_FAILED_ACTION = "[login action] failed login";
 
-//logout
+//logout action types
 export const LOGOUT_ACTION = "[logout action] logout action";
 
-//signup function
+//signup action creator function
 export function signupAction(email, password, callback) {
   return (dispatch) => {
     signup(email, password)
       .then((response) => {
         console.log(response);
-        callback(response)
+        callback(response);
         saveTokenInLocalStorage(response.data);
         dispatch(loadingToggleAction(false));
         dispatch(confirmedSignupAction(response.data));
@@ -35,21 +34,19 @@ export function signupAction(email, password, callback) {
       .catch((error) => {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
-        callback(error.response)
+        callback(error.response);
         dispatch(signupFailedAction(errorMessage));
-        
       });
   };
 }
 
-//login function
-
+//login action creator function
 export function loginAction(email, password, callback) {
   return (dispatch) => {
     login(email, password)
       .then((response) => {
         console.log(response);
-        callback(response)
+        callback(response);
         saveTokenInLocalStorage(response.data);
         dispatch(loadingToggleAction(false));
         dispatch(loginConfirmedAction(response.data));
@@ -57,14 +54,13 @@ export function loginAction(email, password, callback) {
       .catch((error) => {
         dispatch(loadingToggleAction(false));
         const errorMessage = formatError(error.response.data);
-        callback(error.response)
+        callback(error.response);
         dispatch(loginFailedAction(errorMessage));
       });
   };
 }
 
-//login action creator
-
+//login failed action creator
 export function loginFailedAction(data) {
   return {
     type: LOGIN_FAILED_ACTION,
@@ -72,6 +68,7 @@ export function loginFailedAction(data) {
   };
 }
 
+//login confirmed action creator
 export function loginConfirmedAction(data) {
   return {
     type: LOGIN_CONFIRMED_ACTION,
@@ -79,8 +76,7 @@ export function loginConfirmedAction(data) {
   };
 }
 
-//signup action creator
-
+//confirm signup action creator
 export function confirmedSignupAction(payload) {
   return {
     type: SIGNUP_CONFIRMED_ACTION,
@@ -88,6 +84,7 @@ export function confirmedSignupAction(payload) {
   };
 }
 
+//signup failed ation creator
 export function signupFailedAction(message) {
   return {
     type: SIGNUP_FAILED_ACTION,
@@ -96,16 +93,14 @@ export function signupFailedAction(message) {
 }
 
 //logout action creator
-
 export function logoutAction() {
   localStorage.removeItem("userDetails");
-  
+
   return {
     type: LOGOUT_ACTION,
   };
 }
 //loader action creator
-
 export function loadingToggleAction(status) {
   return {
     type: LOADING_TOGGLE_ACTION,

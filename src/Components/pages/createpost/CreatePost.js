@@ -1,26 +1,33 @@
+//importing hooks
 import React, { useState } from "react";
-import "./CreatePost.css";
-import axios from "axios";
-import { Label, Input, Button } from "reactstrap";
 import { useHistory, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+//importing components
 import useValidator from "../../common/usevalidator/useValidator";
-import { toastr } from "react-redux-toastr";
-
+import { Label, Input, Button } from "reactstrap";
 import { MESSAGES } from "../../config/Constant";
-
-import { useDispatch, useSelector } from "react-redux";
 import { API } from "../../config/ApiUrl";
+import Loader from "../../common/loader/Loader";
+
+//importing libraries
+import { toastr } from "react-redux-toastr";
+import axios from "axios";
+
+//importing css
+import "./CreatePost.css";
 
 const CreatePost = () => {
   const history = useHistory();
   const params = useParams();
-  console.log(params);
-  const dispatch = useDispatch();
+
+  //state for loader
+  const [loading, setLoading] = useState(false);
   const [validator, showValidationMessage] = useValidator();
 
+  //useSelector for specific id data
   const user = useSelector((state) => state.users);
   const selectedUser = user.posts;
-  // console.log("selectorUser", selectedUser.id)
   const userId = selectedUser.id;
   console.log(userId);
 
@@ -29,7 +36,7 @@ const CreatePost = () => {
     tourist_email: selectedUser ? selectedUser.tourist_email : "",
     tourist_location: selectedUser ? selectedUser.tourist_location : "",
   };
-
+  //state for data
   const [data, setData] = useState(initialValues);
 
   const changeHandler = (e) => {
@@ -40,23 +47,25 @@ const CreatePost = () => {
     });
   };
 
-  //Create User api
-  const createUserHandler = (e) => {
-    // e.preventDefault();
+  //Create New Tourist
+  const createUserHandler = () => {
+    setLoading(true);
     if (validator.allValid()) {
       axios
         .post("http://restapi.adequateshop.com/api/Tourist", data)
         .then((response) => {
           console.log("New User", response);
 
+          setLoading(true);
           toastr.success("Success", MESSAGES.USER_CREATED_SUCCESSFULLY, {
             autoClose: 10000,
           });
-          console.log("created new user");
-          history.push("/posts");
+          window.location.assign("/posts");
         })
+
         .catch((error) => {
-          console.log(error);
+          console.log("ERROR", error.response.data.Message);
+          toastr.error("Failed", error.response.data.Message);
         });
     } else {
       showValidationMessage(true);
@@ -69,35 +78,43 @@ const CreatePost = () => {
 
   //update user details
   function updateUserHandler(e) {
-    e.preventDefault();
+    setLoading(true);
+    if (validator.allValid()) {
+      e.preventDefault();
 
-    const reqData = {
-      id: params.id,
-      tourist_name: data.tourist_name,
-      tourist_email: data.tourist_email,
-      tourist_location: data.tourist_location,
-    };
+      const reqData = {
+        id: params.id,
+        tourist_name: data.tourist_name,
+        tourist_email: data.tourist_email,
+        tourist_location: data.tourist_location,
+      };
 
-    const request = axios
-      .put(`${API.updateUsers}/${params.id}`, reqData)
-      .then((res) => {
-        console.log("response", res);
-
-        toastr.success("Success", MESSAGES.USER_UPDATED_SUCCESSFULLY, {
-          autoClose: 10000,
+      const request = axios
+        .put(`${API.updateUsers}/${params.id}`, reqData)
+        .then((res) => {
+          console.log("response", res);
+          setLoading(true);
+          toastr.success("Success", MESSAGES.USER_UPDATED_SUCCESSFULLY, {
+            autoClose: 10000,
+          });
+          console.log("Updated User");
+          history.push("/posts");
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.log("error", error.response);
         });
-        console.log("Updated User");
-        history.push("/posts");
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.log("error", error.response);
-      });
+    } else {
+      showValidationMessage(true);
+    }
   }
 
   return (
     <div>
-      <h3>Create Post/ Edit Post</h3>
+      {loading && <Loader />}
+      <h3 className="text-center mt-5">
+        Add New Tourist/ Update Tourist's Details
+      </h3>
       <button
         className="btn btn-outline-secondary"
         style={{ marginLeft: "92%" }}
@@ -117,7 +134,6 @@ const CreatePost = () => {
             value={data.tourist_name}
             onChange={changeHandler}
           />
-
           {validator.message("tourist_name", data.tourist_name, "required", {
             className: "text-danger",
           })}
@@ -134,10 +150,16 @@ const CreatePost = () => {
             value={data.tourist_email}
             onChange={changeHandler}
           />
-          {}
-          {validator.message("tourist_email", data.tourist_email, "required", {
-            className: "text-danger",
-          })}
+
+          {validator.message(
+            "tourist_email",
+            data.tourist_email,
+            "required|email",
+            {
+              className: "text-danger",
+              message: "Invalid email",
+            }
+          )}
         </div>
 
         <div>

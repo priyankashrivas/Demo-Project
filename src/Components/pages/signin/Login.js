@@ -1,25 +1,37 @@
+//importing hooks
 import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+
+//importing libraries
 import { Button, Input, Label } from "reactstrap";
+import { toastr } from "react-redux-toastr";
+
+//importing components
 import Loader from "../../common/loader/Loader";
 import {
   loadingToggleAction,
   loginAction,
 } from "../../features/actions/AuthAction";
-import { useHistory } from "react-router-dom";
-import { toastr } from "react-redux-toastr";
 import { MESSAGES } from "../../config/Constant";
 import useValidator from "../../common/usevalidator/useValidator";
 
 const Login = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
+
+  //state for fields
   const [email, setEmail] = useState("");
-  let errorsObj = { email: "", password: "" };
-  const [errors, setErrors] = useState(errorsObj);
   const [password, setPassword] = useState("");
+
+  //state for validation
   const [validator, showValidationMessage] = useValidator();
 
+  //for errors
+  let errorsObj = { email: "", password: "" };
+  const [errors, setErrors] = useState(errorsObj);
+
+  //on Login
   const onLogin = (e) => {
     e.preventDefault();
     let error = false;
@@ -45,7 +57,7 @@ const Login = (props) => {
   return (
     <div>
       <div className="flex justify-center my-5">
-        {/* {props.showLoading && <Loader/>} */}
+        {props.showLoading && <Loader />}
         <div
           className=" shadow p-3 "
           style={{ width: "31%", marginLeft: "30%", textAlign: "center" }}
@@ -69,7 +81,9 @@ const Login = (props) => {
           )}
           <form onSubmit={onLogin}>
             <div style={{ textAlign: "center" }}>
-              <Label>Email <span style={{ color: "red" }}>*</span></Label>
+              <Label>
+                Email <span style={{ color: "red" }}>*</span>
+              </Label>
               <div>
                 <Input
                   type="text"
@@ -85,7 +99,9 @@ const Login = (props) => {
               })}
             </div>
             <div style={{ textAlign: "center" }}>
-              <Label>Password <span style={{ color: "red" }}>*</span></Label>
+              <Label>
+                Password <span style={{ color: "red" }}>*</span>
+              </Label>
               <div>
                 <Input
                   type="password"
@@ -116,6 +132,7 @@ const Login = (props) => {
   );
 };
 
+//mapStateToProps for error, success message(api errors)
 const mapStateToProps = (state) => {
   return {
     errorMessage: state.auth.errorMessage,

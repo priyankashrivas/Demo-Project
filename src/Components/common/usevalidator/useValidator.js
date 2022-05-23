@@ -11,6 +11,7 @@ const useValidator = (customMessage = {}, customValidator = {}) => {
   if (show) {
     validator.showMessages();
   }
+
   return [validator, setShow];
 };
 

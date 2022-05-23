@@ -1,7 +1,10 @@
 import React from "react";
+
+//importing hooks
 import { connect, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+
+//importing libraries
 import {
   Collapse,
   Navbar,
@@ -10,21 +13,20 @@ import {
   NavItem,
   NavLink,
   Button,
-  Dropdown,
-  DropdownToggle,
 } from "reactstrap";
+import { toastr } from "react-redux-toastr";
 
+//importing Components
 import { isAuthenticated } from "../../selectors/AuthSelectors";
 import { logoutAction } from "../../features/actions/AuthAction";
 import Loader from "../loader/Loader";
-import { toastr } from "react-redux-toastr";
 import { MESSAGES } from "../../config/Constant";
 
 const Header = (props) => {
-  const auth = useSelector((state) => state.auth)
-  console.log(auth.auth.email);
   const dispatch = useDispatch();
-  const history = useHistory();
+
+  const auth = useSelector((state) => state.auth);
+  console.log(auth.auth.email);
 
   //routing for on logout
   const onLogout = (e) => {
@@ -34,11 +36,6 @@ const Header = (props) => {
     toastr.success("success", MESSAGES.USER_LOGOUT, { autoClose: 3000 });
   };
 
-  //routing for on post
-  const onPost = (e) => {
-    e.preventDefault();
-    history.push("/posts");
-  };
   return (
     <div>
       <div>
@@ -48,6 +45,7 @@ const Header = (props) => {
 
           <Collapse navbar>
             <Nav className="ml-auto" navbar>
+              {/* if not logged in */}
               {!props.isAuthenticated && (
                 <>
                   <NavItem>
@@ -59,13 +57,14 @@ const Header = (props) => {
                 </>
               )}
 
+              {/* if logged in */}
               {props.isAuthenticated && (
                 <>
-                   <NavItem>
+                  <NavItem>
                     <Button style={{ marginLeft: "2126%" }} onClick={onLogout}>
                       Logout
                     </Button>
-                  </NavItem> 
+                  </NavItem>
                   <NavItem>
                     <NavLink href="/home" style={{ marginLeft: "-144%" }}>
                       Home
@@ -78,10 +77,9 @@ const Header = (props) => {
                   </NavItem>
                   <NavItem>
                     <NavLink href="#" style={{ marginLeft: "937%" }}>
-                    {auth.auth.email}
+                      {auth.auth.email}
                     </NavLink>
                   </NavItem>
-                 
                 </>
               )}
             </Nav>
@@ -92,6 +90,7 @@ const Header = (props) => {
   );
 };
 
+//mapStateToProps for authentication
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: isAuthenticated(state),
