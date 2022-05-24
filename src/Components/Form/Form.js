@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import "./Form.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
+
+//Importing Libraries
 import useValidator from '../Validator/Validator';
 import { toast } from 'react-toastify';
+
+//Importing Css
+import "./Form.css";
 
 export const Form = () => {
   const initialValues = { name: "", email: "", address: "" };
@@ -13,6 +16,7 @@ export const Form = () => {
   const [isSubmit, setIsSubmit] = useState(false);
   const [validator, showValidationMessage] = useValidator();
 
+  //Create UserId 
   const sendData = () => {
     if (validator.allValid()) {
       axios.post('http://restapi.adequateshop.com/api/Tourist', {
@@ -64,6 +68,7 @@ export const Form = () => {
       <div className="ui divider"></div>
       <form onSubmit={handleSubmit}>
         <div className="field">
+
           <label className="col-sm-2 col-form-label">Name</label>
           <input type='text' className="form-control" name='name' placeholder='username' value={formValues.name}
             onChange={handleChange}
@@ -79,8 +84,8 @@ export const Form = () => {
             onChange={handleChange}
           />
           {validator.message("email", formValues.email, "required|email", { className: "text-danger", })}
-
         </div>
+
         <p>{formErrors.email}</p>
         <br></br>
         <div className="field">
@@ -90,6 +95,7 @@ export const Form = () => {
           />
           {validator.message("address", formValues.address, "required", { className: "text-danger", })}
         </div>
+
         <p>{formErrors.address}</p>
         <br />
         <div>

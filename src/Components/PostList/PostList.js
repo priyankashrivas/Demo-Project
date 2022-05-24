@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { Container, Row, Col, Table, Alert, Button, Toggle, DropdownMenu, ButtonDropdown, DropdownToggle, DropdownItem } from "reactstrap";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
+// Import Libraries
+import { Container, Row, Col, Table, Alert, Button, Toggle, DropdownMenu, ButtonDropdown, DropdownToggle, DropdownItem } from "reactstrap";
 import { toast } from 'react-toastify';
 import { confirmAlert } from "react-confirm-alert";
 import ReactPaginate from "react-paginate";
@@ -14,12 +16,17 @@ const PostList = (id) => {
   const params = useParams();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
+  
+  // Searching
   const [searchName, setSearchName] = useState('');
+  const [dropdownOpen, setOpen] = useState(false);
+
+  //Pagination
   const [pageCount, setPageCount] = useState(1);
   const [currentPage, setcurrentPage] = useState(0);
   const [isLoaded, setisLoaded] = useState(false);
-  const [dropdownOpen, setOpen] = useState(false);
 
+  //Fetching Data from api with pagination
   const fetchData = async (page) => {
     await axios
       .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
@@ -32,18 +39,18 @@ const PostList = (id) => {
       });
   };
 
-
   useEffect(() => {
     fetchData();
   }, []);
 
+  //For Pagination
   const handlePageChange = (selectedObject) => {
     setcurrentPage(selectedObject.selected);
     fetchData(selectedObject.selected);
     console.log("hello", selectedObject);
   };
 
- 
+ //Delete
   const submit = (item) => {
     confirmAlert({
       title: "Warning",
@@ -55,13 +62,12 @@ const PostList = (id) => {
         },
         {
           label: "No"
-          // onClick: () => alert("Click No")
         }
       ]
     });
   };
 
-
+   //Delete UserId via api
   const deleteUser = (id) => {
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`, {
       method: "DELETE",
@@ -85,6 +91,8 @@ const PostList = (id) => {
   const Form = () => {
     navigate.pushState("/Form");
   };
+
+  //Sorting by a to z
   const sortAscending = () => {
     posts.data.sort((a, b) => {
       let fa = a.tourist_name.toLowerCase(),
@@ -96,6 +104,7 @@ const PostList = (id) => {
       return 0;
     });
   };
+  //Sorting by z to a
   const sortDecending = () => {
     posts.data.sort((a,b) => {
       let fa = a.tourist_name.toUpperCase(),
@@ -117,6 +126,7 @@ const PostList = (id) => {
         <button><Link to="/Form">Create</Link> {" "}
         </button>
 
+          {/* Sorting Button */}
         <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
           isOpen={dropdownOpen}>
           <DropdownToggle style={{ marginLeft: '10%', marginTop: '-%' }} className="bg-info" caret >
@@ -130,6 +140,7 @@ const PostList = (id) => {
           </DropdownMenu>
         </ButtonDropdown>
 
+         {/* Searching  */}
         <div className="form-outline mb-4">
           <input
             style={{ width: '30%', marginLeft: '15%' }}
@@ -165,6 +176,7 @@ const PostList = (id) => {
                         <Alert variant={"secondary"}>No Posts Found</Alert>
                       </div>
                     )}
+                    {/* Filtered and map */}
                     <tbody>
                       {posts.data &&
                         posts.data.filter((item) => {
@@ -228,6 +240,8 @@ const PostList = (id) => {
                         })}
                     </tbody>
                   </Table>
+
+                  {/* For Pagination */}
                   {isLoaded ? (
                     <ReactPaginate
                       pageCount={pageCount}

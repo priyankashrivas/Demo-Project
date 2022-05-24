@@ -1,16 +1,15 @@
-
 import React, { useState, useEffect } from 'react';
-import { Label, Input, Button } from "reactstrap";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import { Link } from 'react-router-dom';
+
+//Importing Libraries
+import { Label, Input, Button } from "reactstrap";
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import useValidator from '../Validator/Validator';
 
-
-
+import 'react-toastify/dist/ReactToastify.css';
 
 export const EditUSer = () => {
 
@@ -25,6 +24,8 @@ export const EditUSer = () => {
     const [validator, showValidationMessage] = useValidator();
     const [formValues, setFormValues] = useState(initialValues);
     let params = useParams()
+
+    //For Fetching Data
     const fetchData = async () => {
         await axios
             .get(`http://restapi.adequateshop.com/api/Tourist/${params.id}`)
@@ -54,37 +55,40 @@ export const EditUSer = () => {
             [name]: value,
         });
     };
-
+    
+    //For Edit
     const handelSubmitEditUser = (event) => {
         event.preventDefault();
         EditUser();
     }
-
+    
+    //Edit Uder from api
     const EditUser = (id) => {
-        axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`, {
-            id: params.id,
-            tourist_name: user.tourist_name,
-            tourist_email: user.tourist_email,
-            tourist_location: user.tourist_location
-        }).then((res) => {
-            if (res) {
 
-                const notify = toast.success('Edited Successfully');
-                setTimeout(function () {
-                    navigate('/PostList')
-                }, 5000);
-
-            }
-
-        }).catch(function (error) {
-            console.log(error)
-            if (error.response && error.response.data) {
-                toast.error(error.response.data.Message)
-            }
-        })
-
-    }
-
+        if (validator.allValid()) {
+            axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`, {
+                id: params.id,
+                tourist_name: user.tourist_name,
+                tourist_email: user.tourist_email,
+                tourist_location: user.tourist_location
+            }).then((res) => {
+                if (res) {
+                    const notify = toast.success('Edited Successfully');
+                    setTimeout(function () {
+                        navigate('/PostList')
+                    }, 5000);
+                }
+            }).catch(function (error) {
+                console.log(error)
+                if (error.response && error.response.data) {
+                    toast.error(error.response.data.Message)
+                }
+            });
+        } else {
+            console.log("valid");
+            showValidationMessage(true);
+        }
+    };
 
     return (
 
@@ -100,6 +104,7 @@ export const EditUSer = () => {
                         value={user.tourist_name}
                         onChange={changeHandler}
                     />
+                    {validator.message("tourist_name", user.tourist_name, "required", { className: "text-danger", })}
                 </div>
 
                 <div>
@@ -110,7 +115,7 @@ export const EditUSer = () => {
                         value={user.tourist_email}
                         onChange={changeHandler}
                     />
-                    {validator.message("email", formValues.email, "required|email", { className: "text-danger", })}
+                    {validator.message("tourist_email", user.tourist_email, "required|email", { className: "text-danger", })}
                 </div>
 
                 <div>
@@ -121,6 +126,7 @@ export const EditUSer = () => {
                         value={user.tourist_location}
                         onChange={changeHandler}
                     />
+                    {validator.message("tourist_location", user.tourist_location, "required", { className: "text-danger", })}
                 </div>
                 <br />
 
