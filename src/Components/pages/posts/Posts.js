@@ -81,8 +81,10 @@ const Posts = () => {
 
   //for pagination
   const handlePageChange = (selectedObject) => {
+    setLoading(true)
     setcurrentPage(selectedObject.selected);
     console.log("page", selectedObject);
+    setLoading(false)
     fetchData(selectedObject.selected);
   };
 
