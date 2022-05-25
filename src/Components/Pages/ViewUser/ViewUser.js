@@ -35,16 +35,18 @@ import { useHistory,useParams } from 'react-router-dom';
       )
   return (
 // 
-<div className="container ">
+<div className="container"  style={{marginLeft: '40%',width:"100%"}}>
+  
       <div  className="row d-flex flex-column">
+      <center>
          <button 
           className="btn btn-dark  my-5 "
-          style={{marginLeft: '4%'}} 
+          style={{marginLeft: '1%',width:"100%"}} 
         //   onClick={() => history.push("/profile")}
         >
           View User
         </button>
-        <div className="col-md-8 mx-auto shadow p-5">
+        <div className="col-md-12 mx-auto shadow p-5">
          
             <form onSubmit={handleSubmit}>
               <div className="form-group">
@@ -74,7 +76,7 @@ import { useHistory,useParams } from 'react-router-dom';
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
-              <div className="form-group d-flex align-items-center justify-content-between my-4 " >
+              <div className="form-group d-flex align-items-center justify-content-between my-4" >
                 <button  type="submit" className="btn btn-primary" style={{marginLeft: '5%'}} 
                 onClick={() => history.push("/posts")}>
                  Go back!!
@@ -90,7 +92,9 @@ import { useHistory,useParams } from 'react-router-dom';
             </form>
         
         </div>
+        </center>
       </div>
+      
     </div>
   )
 };
