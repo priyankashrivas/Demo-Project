@@ -64,7 +64,7 @@ const Posts = () => {
       });
     });
   };
-  const viewUser = (id) => {
+  const viewuser = (id) => {
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`).then((result) => {
       result.json().then((resp) => {
         console.warn(resp);
@@ -243,8 +243,9 @@ confirmAlert({
                                     size="sm"
                                     title="view"
                                     className="btn btn-info"
-                                    onClick={() => {
+                                    onClick={(e) => {
                                       history.push(`/posts/viewuser/${item.id}`)
+                                       e.preventDefault();
 
                                     }}
                                   >

@@ -9,7 +9,7 @@ export function signup(email,password)
          password, 
          returnSecureToken: true,
     }
-    //axios call
+    //axios call for signup
     return axios.post( `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8`, postData);
 }
 export function login(email,password) {
@@ -19,7 +19,7 @@ export function login(email,password) {
          password, 
          returnSecureToken: true,
     }
-    //axios call
+    //axios call for signin
     return axios.post( `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8`, postData);
 }
 
@@ -40,7 +40,7 @@ export function formatError(errorResponse) {
         case "USER_DISABLED":
         return "User Disabled";
          default:
-             return '';
+             return "";
     }
 }
 export function saveTokenInLocalStorage(tokenDetails) {
@@ -56,6 +56,7 @@ export function saveTokenInLocalStorage(tokenDetails) {
       return;
     }
   
+    //token expire
     tokenDetails = JSON.parse(tokenDetailsString);
     let expireDate = new Date(tokenDetails.expireDate);
     let todaysDate = new Date();

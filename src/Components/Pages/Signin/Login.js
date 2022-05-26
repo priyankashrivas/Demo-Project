@@ -57,7 +57,8 @@ const Login = ({props}) => {
     
     toast.success("User loggedIn successfully!!");
    
-    history.push('/posts')
+    // history.push('/posts')
+    window.location.assign('/posts');
 }
 
 
