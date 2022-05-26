@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { confirmAlert } from "react-confirm-alert";
 import ReactPaginate from "react-paginate";
 import './PostList.css';
+import Loader from "../Loader/Loader";
 
 const PostList = (id) => {
   const params = useParams();
@@ -26,13 +27,18 @@ const PostList = (id) => {
   const [currentPage, setcurrentPage] = useState(0);
   const [isLoaded, setisLoaded] = useState(false);
 
+  //For Loading
+  const [loading, setLoading] = useState(false);
+
   //Fetching Data from api with pagination
   const fetchData = async (page) => {
+    setLoading(true);
     await axios
       .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
       .then((res) => {
         const posts = res.data;
         setPosts(posts);
+        setLoading(false);
         console.log(posts.data);
         setPageCount(posts.total_pages);
         setisLoaded(true);
@@ -40,12 +46,15 @@ const PostList = (id) => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchData();
   }, []);
 
   //For Pagination
   const handlePageChange = (selectedObject) => {
+    setLoading(true)
     setcurrentPage(selectedObject.selected);
+    setLoading(false)
     fetchData(selectedObject.selected);
     console.log("hello", selectedObject);
   };
@@ -69,10 +78,12 @@ const PostList = (id) => {
 
    //Delete UserId via api
   const deleteUser = (id) => {
+    // setLoading(true);
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`, {
       method: "DELETE",
     }).then((result) => {
       result.json().then((resp) => {
+        // setLoading(true);
         if (resp) {
           const notify = toast.success('Deleted Successfully');
           setTimeout(function () {
@@ -119,6 +130,7 @@ const PostList = (id) => {
 
   return (
     <div>
+      {loading && <Loader />}
       <div className="flex items-center justify-between my-4">
         <h2 style={{ marginLeft: "" }} className="bolder text-lg">
           List

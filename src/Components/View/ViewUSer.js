@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'reactstrap';
 import axios from 'axios';
+import Loader from '../Loader/Loader';
 import { useNavigate, useParams, Link, Navigate } from 'react-router-dom';
 import './ViewUSer.css';
 
 export const ViewUSer = () => {
     const params = useParams();
     const [details, setDetails] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const fetchUserById = async (id) => {
+      setLoading(true);
         await axios.get(`http://restapi.adequateshop.com/api/Tourist/${params.id}`)
             .then((res) => {
                 const details = res.data;
                 console.log("hello", details);
                 setDetails(details);
-
+                setLoading(false);
                 Navigate(`/postList/view/${params.id}`);
 
             });
     };
 
     useEffect(() => {
+      setLoading(true);
         fetchUserById();
     }, []);
 
@@ -30,6 +34,7 @@ export const ViewUSer = () => {
 
     return (
         <div style={{ textAlign: "center", marginTop: "2%"  }}>
+          {loading && <Loader />}
       <h4>User Details of: {details.id}</h4>
       {
         <ul style={{ listStyleType: "none" }}>

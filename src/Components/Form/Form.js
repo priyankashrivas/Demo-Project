@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 //Importing Libraries
 import useValidator from '../Validator/Validator';
 import { toast } from 'react-toastify';
+import Loader from '../Loader/Loader';
 
 //Importing Css
 import "./Form.css";
@@ -15,9 +16,11 @@ export const Form = () => {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
   const [validator, showValidationMessage] = useValidator();
+  const [loading, setLoading] = useState(false);
 
   //Create UserId 
   const sendData = () => {
+    setLoading(true);
     if (validator.allValid()) {
       axios.post('http://restapi.adequateshop.com/api/Tourist', {
         tourist_email: formValues.email,
@@ -26,6 +29,7 @@ export const Form = () => {
       })
         .then(function (response) {
           console.log(response);
+          setLoading(true);
           toast.success(response.message)
           const notify = toast.success('Created Successfully');
           setTimeout(function () {
@@ -51,6 +55,7 @@ export const Form = () => {
   };
 
   const handleSubmit = (e) => {
+    setLoading(true);
     e.preventDefault();
     if (Object.keys(formErrors).length === 0) {
       console.log(formValues);
@@ -63,6 +68,7 @@ export const Form = () => {
 
   return (
     <div>
+      {loading && <Loader />}
       {console.log("valid", validator)}
       <h1 className='text-align:center'>Form</h1>
       <div className="ui divider"></div>
