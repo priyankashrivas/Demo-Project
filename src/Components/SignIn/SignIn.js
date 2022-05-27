@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import {saveTokenLocalStorage} from '../../Components/Services/AuthServices'
 import useValidator from '../Validator/Validator';
 import {formatError} from '../Services/AuthServices'
+import Loader from '../Loader/Loader';
 
 function SignIn() {
     const [email,setEmail] = useState("");
@@ -13,6 +14,7 @@ function SignIn() {
     const navigate = useNavigate()
     const [validator, showValidationMessage] = useValidator();
     const initialValues = { email: "", password: "" };
+    const [loading, setLoading] = useState(false);
     const [formValues, setFormValues] = useState(initialValues);
     
 // async function login()
@@ -37,9 +39,11 @@ const postData = {
     returnSecureToken: true,
 };
 const login = () => {
+    setLoading(true);
     if (validator.allValid()){
     axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8",postData)
     .then(function(response) {
+        setLoading(true);
         console.log("response",response);
         saveTokenLocalStorage(response);
         const notify = toast.success('Login Successfully')
@@ -64,6 +68,7 @@ const login = () => {
 }
   return (
    <div>
+       {loading && <Loader />}
        {console.log("valid", validator)}
       <div className="col-sm-6 offset-sm-3">
        <h2 className=" offset-sm-4">Login Page</h2>

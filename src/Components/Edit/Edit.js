@@ -29,7 +29,7 @@ export const EditUSer = () => {
 
     //For Fetching Data
     const fetchData = async () => {
-        setLoading(true);
+        // setLoading(true);
         await axios
             .get(`http://restapi.adequateshop.com/api/Tourist/${params.id}`)
             .then((res) => {
@@ -69,7 +69,7 @@ export const EditUSer = () => {
     
     //Edit Uder from api
     const EditUser = (id) => {
-        setLoading(true);
+        // setLoading(true);
         if (validator.allValid()) {
             axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`, {
                 id: params.id,
@@ -77,7 +77,7 @@ export const EditUSer = () => {
                 tourist_email: user.tourist_email,
                 tourist_location: user.tourist_location
             }).then((res) => {
-                setLoading(true);
+                // setLoading(true);
                 if (res) {
                     const notify = toast.success('Edited Successfully');
                     setTimeout(function () {

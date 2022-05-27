@@ -5,12 +5,15 @@ import useValidator from '../Validator/Validator';
 import {formatError} from '../Services/AuthServices'
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
+import Loader from '../Loader/Loader';
+
 
 function SignUp()
 {
   
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const [loading, setLoading] = useState(false);
   const [validator, showValidationMessage] = useValidator();
   const navigate = useNavigate()
   
@@ -39,9 +42,11 @@ const postData = {
 };
 
 const register = () => {
+  setLoading(true);
   if (validator.allValid()) {
     axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCX-2V2V0v28SnccwOU4uq4kjzVNYvvka8",postData)
     .then(function(response) {
+      setLoading(true);
       saveTokenLocalStorage(response);
       navigate('/SignIn')
       toast.success("Registered Successfully,Please login to your account");
@@ -60,6 +65,7 @@ showValidationMessage(true);
   return(
 
     <div className="col-sm-6 offset-sm-3">
+      {loading && <Loader />}
       {console.log("valid", validator)}
       <h1 className="offset-sm-4">SignUp Here</h1>
       <br />

@@ -34,7 +34,8 @@ const PostList = (id) => {
   const fetchData = async (page) => {
     setLoading(true);
     await axios
-      .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
+    
+    .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
       .then((res) => {
         const posts = res.data;
         setPosts(posts);
@@ -52,9 +53,9 @@ const PostList = (id) => {
 
   //For Pagination
   const handlePageChange = (selectedObject) => {
-    setLoading(true)
+    setLoading(true);
     setcurrentPage(selectedObject.selected);
-    setLoading(false)
+    setLoading(false);
     fetchData(selectedObject.selected);
     console.log("hello", selectedObject);
   };
@@ -78,12 +79,12 @@ const PostList = (id) => {
 
    //Delete UserId via api
   const deleteUser = (id) => {
-    // setLoading(true);
+    setLoading(true);
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`, {
       method: "DELETE",
     }).then((result) => {
+      setLoading(false);
       result.json().then((resp) => {
-        // setLoading(true);
         if (resp) {
           const notify = toast.success('Deleted Successfully');
           setTimeout(function () {
