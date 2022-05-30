@@ -17,7 +17,7 @@ const PostList = (id) => {
   const params = useParams();
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  
+
   // Searching
   const [searchName, setSearchName] = useState('');
   const [dropdownOpen, setOpen] = useState(false);
@@ -34,8 +34,8 @@ const PostList = (id) => {
   const fetchData = async (page) => {
     setLoading(true);
     await axios
-    
-    .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
+
+      .get(`http://restapi.adequateshop.com/api/Tourist?page=${page}`)
       .then((res) => {
         const posts = res.data;
         setPosts(posts);
@@ -47,20 +47,22 @@ const PostList = (id) => {
   };
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(false);
     fetchData();
+    // addDots(posts.data.tourist_email, 7)
   }, []);
+
 
   //For Pagination
   const handlePageChange = (selectedObject) => {
-    setLoading(true);
+    setLoading(false);
     setcurrentPage(selectedObject.selected);
     setLoading(false);
     fetchData(selectedObject.selected);
     console.log("hello", selectedObject);
   };
 
- //Delete
+  //Delete
   const submit = (item) => {
     confirmAlert({
       title: "Warning",
@@ -77,7 +79,7 @@ const PostList = (id) => {
     });
   };
 
-   //Delete UserId via api
+  //Delete UserId via api
   const deleteUser = (id) => {
     setLoading(true);
     fetch(`http://restapi.adequateshop.com/api/Tourist/${id}`, {
@@ -90,8 +92,6 @@ const PostList = (id) => {
           setTimeout(function () {
             navigate('/PostList')
           }, 3000);
-
-
         }
         console.warn(resp);
         fetchData();
@@ -99,17 +99,22 @@ const PostList = (id) => {
     });
   };
 
-
   const Form = () => {
     navigate.pushState("/Form");
   };
-
+  // function addDots(string, limit) {
+  //   var dots = "...";
+  //   if (string.length > limit) {
+  //     string = string.substring(0, limit) + dots;
+  //   }
+  //   return string;
+  // };
   //Sorting by a to z
   const sortAscending = () => {
     posts.data.sort((a, b) => {
       let fa = a.tourist_name.toLowerCase(),
-      fb = b.tourist_name.toLowerCase();
-      if(fa < fb) {
+        fb = b.tourist_name.toLowerCase();
+      if (fa < fb) {
         return -1;
         console.log("post", posts);
       }
@@ -118,16 +123,17 @@ const PostList = (id) => {
   };
   //Sorting by z to a
   const sortDecending = () => {
-    posts.data.sort((a,b) => {
+    posts.data.sort((a, b) => {
       let fa = a.tourist_name.toUpperCase(),
-      fb = b.tourist_name.toUpperCase();
+        fb = b.tourist_name.toUpperCase();
       if (fa > fb) {
         return -1;
-        console.log("post",posts);
+        console.log("post", posts);
       }
       return 0;
     });
   };
+
 
   return (
     <div>
@@ -139,7 +145,7 @@ const PostList = (id) => {
         <button><Link to="/Form">Create</Link> {" "}
         </button>
 
-          {/* Sorting Button */}
+        {/* Sorting Button */}
         <ButtonDropdown toggle={() => { setOpen(!dropdownOpen) }}
           isOpen={dropdownOpen}>
           <DropdownToggle style={{ marginLeft: '10%', marginTop: '-%' }} className="bg-info" caret >
@@ -153,7 +159,7 @@ const PostList = (id) => {
           </DropdownMenu>
         </ButtonDropdown>
 
-         {/* Searching  */}
+        {/* Searching  */}
         <div className="form-outline mb-4">
           <input
             style={{ width: '30%', marginLeft: '15%' }}
@@ -168,9 +174,9 @@ const PostList = (id) => {
 
       <Container fluid className="page-container-section">
         <Row className="custom-row">
-          <Col xxl={10} xl={9} lg={8} md={8}>
+          <Col xxl={10} xl={8} lg={8} md={8}>
             <Row className="m-t30">
-              <Col xxl={8} xl={9} lg={8} md={8}>
+              <Col xxl={8} xl={10} lg={4} md={4}>
                 <div className="table-scroll">
                   <Table className="custom-table">
                     {console.log("abcd", posts && posts.data)}
@@ -202,50 +208,52 @@ const PostList = (id) => {
                         }).map((item) => {
                           return (
                             <tr key={item.id}>
-                              <td style={{ width: "18%" }}>{item.id}</td>
+                              <td>{item.id}</td>
                               <td>{item.tourist_name}</td>
                               <td>{item.tourist_email}</td>
                               <td>{item.tourist_location}</td>
+                              <td >
+                                <Button
+                                  variant="success"
+                                  size="sm"
+                                  title="view"
+                                  className="btn btn-info"
+                                >
+                                  <div
+                                    onClick={() => {
+                                      navigate(
+                                        `/postlist/view/${item.id}`
+                                      );
+                                    }}
+                                  >View
+                                  </div></Button>
+                              </td>
 
                               <td>
-                                <td className="custom_view">
-                                  <Button
-                                    variant="success"
-                                    size="sm"
-                                    title="view"
-                                    className="=" btn btn-info
-                                  >
-                                    <div
-                                      onClick={() => {
-                                        navigate(
-                                          `/postList/view/${item.id}`
-                                        );
-                                      }}
-                                    >View
-                                    </div></Button>
-                                </td>
-                                <td>
+                                <Button
+                                  variant="success"
+                                  size="sm"
+                                  title="view"
+                                  className="btn btn-dark"
+                                  onClick={() => submit(item)}
+                                >
+                                  Delete
+                                </Button>
 
-                                  <Button
-                                    variant="success"
-                                    size="sm"
-                                    title="view"
-                                    className="btn btn-dark"
-                                    onClick={() => submit(item)}
-                                  >
-                                    Delete
-                                  </Button>
-                                </td>
                               </td>
                               <td>
                                 <Button
                                   variant="success"
-                                  type="button"
                                   size="sm"
                                   title="view"
                                   className="btn btn-warning"
+                                  onClick={() => {
+                                    navigate(
+                                      `/Edit/${item.id}`
+                                    );
+                                  }}
                                 >
-                                  <Link to={`/Edit/${item.id}`}>Edit</Link> {" "}
+                                  <div>Edit</div>
                                 </Button>
                               </td>
                             </tr>

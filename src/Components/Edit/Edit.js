@@ -60,24 +60,24 @@ export const EditUSer = () => {
             [name]: value,
         });
     };
-    
+
     //For Edit
     const handelSubmitEditUser = (event) => {
         event.preventDefault();
         EditUser();
     }
-    
+
     //Edit Uder from api
     const EditUser = (id) => {
-        // setLoading(true);
         if (validator.allValid()) {
+            setLoading(true);
             axios.put(`http://restapi.adequateshop.com/api/Tourist/${params.id}`, {
                 id: params.id,
                 tourist_name: user.tourist_name,
                 tourist_email: user.tourist_email,
                 tourist_location: user.tourist_location
             }).then((res) => {
-                // setLoading(true);
+                setLoading(false);
                 if (res) {
                     const notify = toast.success('Edited Successfully');
                     setTimeout(function () {
@@ -145,5 +145,4 @@ export const EditUSer = () => {
         </div>
     );
 }
-
 export default EditUSer;

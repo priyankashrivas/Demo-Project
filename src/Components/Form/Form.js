@@ -20,8 +20,8 @@ export const Form = () => {
 
   //Create UserId 
   const sendData = () => {
-    setLoading(true);
     if (validator.allValid()) {
+      setLoading(true);
       axios.post('http://restapi.adequateshop.com/api/Tourist', {
         tourist_email: formValues.email,
         tourist_name: formValues.name,
@@ -29,7 +29,7 @@ export const Form = () => {
       })
         .then(function (response) {
           console.log(response);
-          setLoading(true);
+          setLoading(false);
           toast.success(response.message)
           const notify = toast.success('Created Successfully');
           setTimeout(function () {
@@ -37,6 +37,7 @@ export const Form = () => {
           }, 3000);
 
         }).catch(function (error) {
+          setLoading(false);
           if (error.response && error.response.data) {
             toast.error(error.response.data.Message)
 
@@ -55,7 +56,7 @@ export const Form = () => {
   };
 
   const handleSubmit = (e) => {
-    setLoading(true);
+    setLoading(false);
     e.preventDefault();
     if (Object.keys(formErrors).length === 0) {
       console.log(formValues);

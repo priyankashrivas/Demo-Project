@@ -9,32 +9,26 @@ import SignIn from './Components/SignIn/SignIn';
 import { ToastContainer } from 'react-toastify';
 import NavBar from './Components/NavBar/NavBar';
 
-
-
-
+let token = JSON.parse(localStorage.getItem("userDetails"));
+let auth = token && token.data.idToken
 
 function App() {
   return (
     <>
-     
       <Router>
         <NavBar />
         <Routes>
-          <Route exact path='/' element={<SignUp />} />
-          <Route exact path='/Form' element={<Form />} />
-          <Route exact path='/postlist' element={<PostList />} />
-          {/* <Route exact path='/form' element={<Form />} /> */}
-          <Route exact path='/edit/:id' element={<Edit />} />
-          <Route exact path='/view' element={<ViewUSer />} />
-          <Route exact path='postList/view/:id' element={<ViewUSer />} />
-          <Route exact path='/SignUp' element={<SignUp />} />
-          <Route exact path='/SignIn' element={<SignIn />} />
+          {!auth && <Route exact path='/SignIn' element={<SignIn />} />}
+          {!auth && <Route exact path='/' element={<SignUp />} />}
+          {auth && <Route exact path='/Form' element={<Form />} />}
+          {auth && <Route exact path='/postlist' element={<PostList />} />}
+          {auth && <Route exact path='/Edit/:id' element={<Edit />} />}
+          {auth && <Route exact path='/view' element={<ViewUSer />} />}
+          <Route exact path='postlist/view/:id' element={<ViewUSer />} />
+          {/* <Route exact path='postlist/Edit/:id' element={<Edit/>}/> */}
         </Routes>
       </Router>
       < ToastContainer />
-      
-      
-      
     </>
   );
 }
