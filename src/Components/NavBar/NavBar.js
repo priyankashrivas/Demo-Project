@@ -44,6 +44,9 @@ function NavBar(props) {
                         {auth && <NavItem>
                             <NavLink href="/postlist">PostList</NavLink>
                         </NavItem>}
+                        {auth && <NavItem>
+                            <NavLink href="/field">AddField</NavLink>
+                        </NavItem>}
 
                         {auth && <NavItem>
                             <NavLink style={{ marginLeft: '1300%' }}
